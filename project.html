@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pl" data-variant="c">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artur Panin — Images Portfolio</title>
+<meta name="theme-color" content="#121211">
+<link rel="stylesheet" href="assets/fonts.css?v=20261112e"><link rel="stylesheet" href="assets/fontsets.css?v=20261112e"><link rel="stylesheet" href="assets/compare.css?v=20261112e"><link rel="stylesheet" href="style.css?v=20261112e">
+</head>
+<body>
+<a class="skip" href="#k1" data-t="skipFrames"></a>
+<header class="hud"><a class="logo cond" href="index.html">Artur Panin</a><nav class="lbl" id="nav" data-t-aria="projects"></nav><div class="r lbl"><a class="role" href="index.html" data-t="allWorks"></a><nav class="lang" data-lang-switch></nav></div></header>
+<main id="main"></main>
+<script src="assets/data.js?v=20261112e"></script>
+<script src="assets/site.js?v=20261112e"></script>
+<script src="assets/compare.js?v=20261112e"></script>
+<script>
+'use strict';
+const A = ARTUR, { T, L } = Site, p = A.byId(new URLSearchParams(location.search).get('p')), k = A.projects.indexOf(p), nx = A.projects[(k + 1) % A.projects.length];
+document.title = `${L(p.name)} — Artur Panin`;
+document.getElementById('nav').innerHTML = A.projects.map(q => `<a href="project.html?p=${q.id}"${q === p ? ' aria-current="page"' : ''}>${q.no} ${L(q.short)}</a>`).join('');
+document.getElementById('main').innerHTML = `
+<section class="title">
+  <img class="bgimg" src="${A.src(p.frames[0].img, 'after')}" alt="" style="object-position:${p.frames[0].pos}">
+  <span class="lbl mute">${T('project')} ${p.no} / 0${A.projects.length}</span>
+  <h1 class="cond">${L(p.name)}</h1>
+  <div class="meta lbl"><span>${T('stagesVal')}</span>${p.frames.map((f, i) => `<a href="#k${i + 1}">${f.code} — ${L(f.title)} ↓</a>`).join('')}<span class="mute">${T('dragShort')}</span></div>
+</section>
+${p.frames.map((f, i) => `
+<section class="shot" id="k${i + 1}" data-cmp-scope>
+  ${Compare.html(f, { start: 50, eager: i === 0 })}
+  <div class="info"><span class="num cond">0${i + 1}</span><span class="lbl">${f.code}<br><span class="mute">${L(f.title)}</span></span>
+    <div class="seg lbl" role="group" aria-label="${T('frameView')}"><button type="button" data-cmp-set="100">${T('base')}</button><button type="button" data-cmp-set="50">50 / 50</button><button type="button" data-cmp-set="0">${T('aiShort')}</button></div></div>
+</section>`).join('')}
+<a class="nextp" href="project.html?p=${nx.id}"><span class="lbl mute">${T('nextProject')} — ${nx.no}</span><div class="cond">${L(nx.name)} →</div></a>`;
+// Самое длинное слово названия задаёт предельный кегль заголовка, чтобы оно не обрезалось на телефоне.
+const lw = s => Math.max(...s.split(/\s+/).map(w => w.length));
+document.querySelector('.title h1').style.setProperty('--lw', lw(L(p.name)));
+document.querySelector('.nextp .cond').style.setProperty('--lw', lw(L(nx.name)) + 2);
+Compare.mountAll();
+Site.ready();
+</script>
+</body>
+</html>

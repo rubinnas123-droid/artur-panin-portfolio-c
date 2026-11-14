@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pl" data-variant="c">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artur Panin — Images Portfolio</title>
+<meta name="description" content="Artur Panin — Images Portfolio. Od modelu do obrazu. / From model to image.">
+<meta name="theme-color" content="#121211">
+<link rel="stylesheet" href="assets/fonts.css?v=20261112e"><link rel="stylesheet" href="assets/fontsets.css?v=20261112e"><link rel="stylesheet" href="assets/compare.css?v=20261112e"><link rel="stylesheet" href="style.css?v=20261112e">
+</head>
+<body>
+<a class="skip" href="#board" data-t="skipWorks"></a>
+<header class="hud"><a class="logo cond" href="index.html">Artur Panin</a><nav class="lbl" id="nav" data-t-aria="projects"></nav><div class="r lbl"><span class="role">Images Portfolio</span><nav class="lang" data-lang-switch></nav></div></header>
+<main>
+  <section class="open" id="open" data-cmp-scope></section>
+  <section class="board" id="board">
+    <div class="intro"><p data-t="introC"></p><span class="lbl mute" data-t="hoverHint"></span></div>
+    <div id="projects"></div>
+  </section>
+  <footer class="foot"><span class="cond">Artur Panin</span><a class="lbl" href="#open" data-t="toTop"></a></footer>
+</main>
+<script src="assets/data.js?v=20261112e"></script>
+<script src="assets/site.js?v=20261112e"></script>
+<script src="assets/compare.js?v=20261112e"></script>
+<script>
+'use strict';
+const A = ARTUR, { T, L } = Site, p0 = A.projects[0], f0 = p0.frames[0];
+document.getElementById('nav').innerHTML = A.projects.map(p => `<a href="project.html?p=${p.id}">${p.no} ${L(p.short)}</a>`).join('');
+// Первый экран: кадр на всю ширину. При загрузке шторка один раз проходит от базы 3D к готовой работе.
+document.getElementById('open').innerHTML = Compare.html(f0, { start: 100, eager: true }) + `
+  <div class="shade"></div><h1 class="cond"><span>Artur</span> <span>Panin</span></h1>
+  <div class="row lbl"><span>${L(p0.name)} — ${f0.code}</span><button type="button" data-cmp-set="100">${T('replay')}</button></div>`;
+const tile = (p, f, i, cls) => `
+  <a class="tile ${cls}" href="project.html?p=${p.id}#k${i + 1}">
+    <div class="ph"><img src="${A.src(f.img, 'after', cls === 't2')}" alt="${L(p.name)}: ${L(f.title)}" loading="lazy"><img class="b" src="${A.src(f.img, 'before', cls === 't2')}" alt="" loading="lazy"><span class="st lbl">${T('base')}</span></div>
+    <div class="cap lbl"><span>${f.code} — ${L(f.title)}</span><span class="mute">${L(p.short)}</span></div></a>`;
+document.getElementById('projects').innerHTML = A.projects.map((p, k) => `
+  <article class="proj${k % 2 ? ' mirror' : ''}">
+    <span class="no lbl">${p.no}</span><h2 class="cond"><a href="project.html?p=${p.id}">${L(p.name)}</a></h2>
+    ${tile(p, p.frames[0], 0, 't1')}${tile(p, p.frames[1], 1, 't2')}
+  </article>`).join('');
+Compare.mountAll();
+Site.ready();
+const hero = document.querySelector('.open .cmp');
+addEventListener('load', () => setTimeout(() => Compare.animate(hero, 0), 500));
+</script>
+</body>
+</html>
